@@ -1,0 +1,37 @@
+package com.maturity.models.api.controller;
+
+import com.maturity.models.api.exception.ErrorResponse;
+import com.maturity.models.api.exception.UsernameAlreadyInUseException;
+import com.maturity.models.api.model.User;
+import com.maturity.models.api.service.UserService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/users")
+@RequiredArgsConstructor
+@Slf4j
+public class UserController {
+    private final UserService userService;
+
+    @PostMapping()
+    public ResponseEntity<?> register(@RequestBody User user) {
+        try {
+            User registeredUser = userService.register(user);
+            return ResponseEntity.status(HttpStatus.CREATED).body(registeredUser);
+        } catch (UsernameAlreadyInUseException e) {
+            log.error("Username already in use: {}", e.getMessage(), e);
+            ErrorResponse errorResponse = new ErrorResponse("user0001", "Username already in use", "Choose a different username");
+            return ResponseEntity.badRequest().body(errorResponse);
+        } catch (RuntimeException e) {
+            log.error("Unexpected error during registration: {}", e.getMessage(), e);
+            ErrorResponse errorResponse = new ErrorResponse("user0002", "Unexpected error", "Please try again later");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+    
+}

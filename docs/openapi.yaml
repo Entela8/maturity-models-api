@@ -1,0 +1,111 @@
+openapi: 3.0.1
+info:
+  title: Maturity Models Assessments
+  version: v1.0.0
+  description: API documentation
+servers:
+  - url: 'http://localhost:8080'
+
+#---------------------------- AUTHENTIFICATION ---------------------------------
+paths:
+  '/api/v1/auth/login':
+    post:
+      tags:
+        - Authentification
+      operationId: login
+      summary: Authentification of an user
+      description: If the request is successfull, a jwt and jwt refresh token is returned. If not an error message is shown.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginBody'
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          description: BAD REQUEST
+
+  '/api/v1/auth/refresh-token':
+    post:
+      tags:
+        - Authentification
+      operationId: refreshToken
+      summary: Refresh user token
+      description: If the request succeeds, a new jwt is returned. It can fail if the refreshToken provided is expired or unassigned to a valid user.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenBody'
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RefreshTokenResponse'
+        '401':
+          description: Unauthorized
+
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      example: "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcyOTc4MjUwNiwiZXhwIjoxNzI5NzgzNDA2fQ.q3b5ab6otdobozzoGNPU3VWWX2Gti8N5Dm9NK37gZm4"
+
+  schemas:
+    LoginBody:
+      required:
+        - username
+        - password
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+
+    LoginResponse:
+      type: object
+      properties:
+        type:
+          type: string
+          example: Bearer
+        token:
+          type: string
+          description: JWT token used for authentication.
+          example: "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcyOTI4MTkwNCwiZXhwIjoxNzI5MjgyODA0fQ.PRtfOQ2rNJBG7sh8GeHC6swbs9v3KECS4Ulbb2LNDu8"
+        refreshToken:
+          type: string
+          description: JWT refresh token to obtain a new token after expiration.
+          example: "eyJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoicmVmcmVzaCIsInN1YiI6ImFkbWluIiwiaWF0IjoxNzI5MjgxOTA0LCJleHAiOjE3Mjk4ODY3MDR9.oD66C_z-YJTC5Oq1DuICqLScANPE13pfEdY4zqaos9I"
+
+    RefreshTokenBody:
+      required:
+        - refreshToken
+      type: object
+      properties:
+        refreshToken:
+          type: string
+
+    RefreshTokenResponse:
+      type: object
+      properties:
+        type:
+          type: string
+          example: Bearer
+        token:
+          type: string
+          description: JWT token used for authentication.
+          example: "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcyOTI4MTkwNCwiZXhwIjoxNzI5MjgyODA0fQ.PRtfOQ2rNJBG7sh8GeHC6swbs9v3KECS4Ulbb2LNDu8"
+
+security:
+  - bearerAuth: []
