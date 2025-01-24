@@ -1,15 +1,26 @@
 # maturity-models-api
 
 When's the first time running the app:
+```sh
 mvn clean install
+```
 
-docker compose up 
+Run docker:
+```sh
+docker compose up
+```
 
-To run spring boot:
+Run spring boot:
+```sh
 mvn spring-boot:run
+```
 
 Stop docker:
+```sh
 docker compose down
+```
 
-to manipulate the DB from terminal:
+To manipulate the DB from terminal (you don't probably have to do this):
+```sh
 docker exec -it maturity-models-api-database-1 psql -U admin -d maturity_models
+```
