@@ -9,10 +9,10 @@ import org.springframework.core.io.FileSystemResource;
 public class AppConfig {
 
     @Bean
-    static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
-        PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();
+    PropertySourcesPlaceholderConfigurer propertySources() {
+        final PropertySourcesPlaceholderConfigurer configurer =
+                new PropertySourcesPlaceholderConfigurer();
         configurer.setLocation(new FileSystemResource(".env"));
         return configurer;
     }
-
 }
