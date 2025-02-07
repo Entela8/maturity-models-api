@@ -10,20 +10,26 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 @Slf4j
+@CrossOrigin
 public class AuthController {
     private final AuthService authService;
-
+    
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user) {
         try {
             Map<String, Object> authData = authService.login(user);
             return ResponseEntity.ok(authData);
         } catch (RuntimeException e) {
-            return handleAuthError(e, "auth-0001", "Invalid credentials or authentication failure");
+            return handleAuthError(
+                e, 
+                "auth-0001", 
+                "Invalid credentials or authentication failure"
+            );
         }
     }
 
@@ -40,14 +46,22 @@ public class AuthController {
             Map<String, Object> authData = authService.refreshToken(refreshToken);
             return ResponseEntity.ok(authData);
         } catch (RuntimeException e) {
-            return handleAuthError(e, "auth-0002", "Token refresh failure");
+            return handleAuthError(
+                e, 
+                "auth-0002", 
+                "Token refresh failure"
+            );
         }
     }
 
     private ResponseEntity<?> handleAuthError(Exception e, String errorCode, String userMessage) {
         log.error("Authentication error: {}", e.getMessage(), e);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(createErrorResponse(errorCode, e.getMessage(), userMessage));
+                .body(createErrorResponse(
+                    errorCode, 
+                    e.getMessage(), 
+                    userMessage
+                ));
     }
 
     private Map<String, String> createErrorResponse(String errorCode, String developerMessage, String userMessage) {

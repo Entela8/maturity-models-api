@@ -26,10 +26,4 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
-    public User setGitlabAccessToken(String username, String token) {
-        User user = userRepository.findByUsername(username);
-        user.setGitlabAccessToken(token);
-        return userRepository.save(user);
-    }
-
 }

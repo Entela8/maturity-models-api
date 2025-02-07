@@ -14,6 +14,9 @@
 /home/snake/Documents/maturity-models/maturity-models-api/src/main/java/com/maturity/models/api/jwt/JwtFilter.java
 /home/snake/Documents/maturity-models/maturity-models-api/src/main/java/com/maturity/models/api/jwt/JwtTokenGenerator.java
 /home/snake/Documents/maturity-models/maturity-models-api/src/main/java/com/maturity/models/api/jwt/JwtTokenValidator.java
+/home/snake/Documents/maturity-models/maturity-models-api/src/main/java/com/maturity/models/api/model/Answer.java
+/home/snake/Documents/maturity-models/maturity-models-api/src/main/java/com/maturity/models/api/model/Model.java
+/home/snake/Documents/maturity-models/maturity-models-api/src/main/java/com/maturity/models/api/model/Question.java
 /home/snake/Documents/maturity-models/maturity-models-api/src/main/java/com/maturity/models/api/model/Role.java
 /home/snake/Documents/maturity-models/maturity-models-api/src/main/java/com/maturity/models/api/model/User.java
 /home/snake/Documents/maturity-models/maturity-models-api/src/main/java/com/maturity/models/api/repository/UserRepository.java

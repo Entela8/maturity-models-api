@@ -4,6 +4,7 @@ package com.maturity.models.api.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -46,6 +47,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                     auth -> auth
                         .requestMatchers("/api/v1/auth/*").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/users").permitAll()
                         .anyRequest().authenticated()
                 )
             
