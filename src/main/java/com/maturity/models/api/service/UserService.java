@@ -47,7 +47,7 @@ public class UserService {
         List<UserDTO> userDTOList = new ArrayList<>();
             
         List<User> users = userRepository.findAll();
-        
+
         for (User u : users) {
             UserDTO userDTO = new UserDTO();
             userDTO.setId(u.getId());
@@ -62,5 +62,13 @@ public class UserService {
 
         return userDTOList;
     }
+
+    public void ensureUserIsAllowed(String username) {
+        User user = userRepository.findByUsername(username);
+    
+        if (user.getRole() != Role.ADMIN && user.getRole() != Role.OWNER) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not allowed to do this action.");
+        }
+    }    
 
 }

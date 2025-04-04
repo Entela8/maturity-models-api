@@ -1,5 +1,6 @@
 package com.maturity.models.api.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.maturity.models.api.dto.ModelDTO;
 import com.maturity.models.api.model.Model;
 import com.maturity.models.api.requests.models.CreateModelRequest;
 import com.maturity.models.api.service.ModelService;
@@ -38,15 +40,25 @@ public class ModelController {
           } catch (ResponseStatusException e) {
                return ResponseEntity
                .status(e.getStatusCode())  // Uses the correct 403 status
-               .body(Map.of("error", e.getStatusCode(), "message", e.getBody()));
+               .body(Map.of("model-01", e.getStatusCode(), "message", e.getBody()));
           } catch (RuntimeException e) {
-               return handleError(e, "model-0002", "Invalid parameters");
+               return handleError(e, "model-02", "Invalid parameters");
           }
      }
 
-     @GetMapping("/test")
-     public String getMethodName(@RequestParam String param) {
-         return "hey";
+     @GetMapping("/all")
+     public ResponseEntity<?> getAllModels(Authentication authentication) {
+          try {
+               final String username = authentication.getName();
+               List<ModelDTO> modelDTOs = modelService.getAllModels(username);
+               return ResponseEntity.status(HttpStatus.OK).body(modelDTOs);
+          } catch (ResponseStatusException e) {
+               return ResponseEntity
+               .status(e.getStatusCode())
+               .body(Map.of("model-03", e.getStatusCode(), "message", e.getBody()));
+          } catch (RuntimeException e) {
+               return handleError(e, HttpStatus.INTERNAL_SERVER_ERROR.toString(), "Invalid parameters");
+          }
      }
      
  
