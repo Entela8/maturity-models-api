@@ -46,10 +46,10 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                     auth -> auth
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/v1/auth/*").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/users/register").permitAll()
-                        .requestMatchers("/api/v1/models/test").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/models/new").permitAll() // Allow POST /new without authentication
+                        .requestMatchers(HttpMethod.POST, "/api/v1/models/new").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtFilter(customUserDetailsService, jwtTokenValidator, jwtClaimExtractor), UsernamePasswordAuthenticationFilter.class)

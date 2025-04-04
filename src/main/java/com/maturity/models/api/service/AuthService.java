@@ -5,7 +5,6 @@ import com.maturity.models.api.exception.InvalidCredentialsException;
 import com.maturity.models.api.exception.InvalidRefreshTokenException;
 import com.maturity.models.api.jwt.JwtTokenGenerator;
 import com.maturity.models.api.jwt.JwtTokenValidator;
-import com.maturity.models.api.model.Role;
 import com.maturity.models.api.model.User;
 import com.maturity.models.api.repository.UserRepository;
 
