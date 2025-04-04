@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
@@ -21,6 +22,7 @@ import com.maturity.models.api.service.ModelService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
@@ -60,8 +62,23 @@ public class ModelController {
                return handleError(e, HttpStatus.INTERNAL_SERVER_ERROR.toString(), "Invalid parameters");
           }
      }
+
+     @GetMapping("/{id}")
+     public ResponseEntity<?> getModelFromID(@PathVariable Long id, Authentication authentication) {
+         if (authentication == null || !authentication.isAuthenticated()) {
+             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not authenticated");
+         }
      
- 
+         try {
+             Model model = modelService.getModel(authentication.getName(), id); 
+             return ResponseEntity.ok(model);
+         } catch (ResponseStatusException e) {
+             return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
+         } catch (Exception e) {
+             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
+         }
+     } 
+     
      private ResponseEntity<?> handleError(Exception e, String errorCode, String message) {
           return ResponseEntity.badRequest().body(Map.of("error", errorCode, "message", message));
      }      

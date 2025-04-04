@@ -2,13 +2,17 @@ package com.maturity.models.api.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.maturity.models.api.model.Answer;
 import com.maturity.models.api.model.Model;
 import com.maturity.models.api.dto.ModelDTO;
 import com.maturity.models.api.dto.UserDTO;
+import com.maturity.models.api.exception.NotFoundException;
 import com.maturity.models.api.model.Question;
 import com.maturity.models.api.model.User;
 import com.maturity.models.api.repository.ModelRepository;
@@ -72,6 +76,11 @@ public class ModelService {
           }
 
           return modelDTOs;
-
      }
+
+     public Model getModel(String username, Long modelId) {
+     return modelRepository.findById(modelId)
+               .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Model not found"));
+     }
+
 }
