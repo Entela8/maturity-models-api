@@ -1,2 +1,41 @@
-.vscode
-target
+### Ignorer les fichiers générés et les dossiers temporaires ###
+/target/
+*.log
+*.out
+*.tmp
+
+### Ignorer les fichiers de configuration IDE ###
+.vscode/
+.idea/
+*.iml
+
+### Ignorer les fichiers Maven ###
+/.mvn/
+/pom.xml.tag
+/pom.xml.releaseBackup
+/pom.xml.versionsBackup
+/logs/
+*.swp
+
+### Ignorer les fichiers Gradle (si applicable) ###
+.gradle/
+/build/
+*.gradle.kts
+gradle-app.setting
+
+### Ignorer les fichiers système ###
+.DS_Store
+Thumbs.db
+
+### Ignorer les fichiers environnementaux et secrets ###
+.env
+.env.local
+application.properties
+application.yml
+application-*.properties
+application-*.yml
+
+### Ignorer les dépendances ###
+/node_modules/
+/yarn.lock
+/package-lock.json
