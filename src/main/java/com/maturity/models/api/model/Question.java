@@ -2,7 +2,7 @@ package com.maturity.models.api.model;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -21,10 +21,11 @@ public class Question {
      @GeneratedValue(strategy = GenerationType.IDENTITY)
      private Long id;
  
-     @Column(nullable = false, unique = true)
+     @Column(nullable = false, unique = false)
      private String content;
 
      @ManyToOne
+     @JsonBackReference
      @JoinColumn(name = "model_id", nullable = false)
      private Model model;
 
