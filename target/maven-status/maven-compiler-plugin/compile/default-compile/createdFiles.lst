@@ -5,6 +5,7 @@ com/maturity/models/api/jwt/JwtClaimExtractor.class
 com/maturity/models/api/jwt/JwtTokenValidator.class
 com/maturity/models/api/exception/InvalidGitlabAccessTokenException.class
 com/maturity/models/api/model/Role.class
+com/maturity/models/api/model/Question.class
 com/maturity/models/api/requests/user/SetGitlabAccessTokenRequest.class
 com/maturity/models/api/exception/UsernameAlreadyInUseException.class
 com/maturity/models/api/exception/ErrorResponse.class
@@ -13,8 +14,10 @@ com/maturity/models/api/exception/InvalidCredentialsException.class
 com/maturity/models/api/config/AppConfig.class
 com/maturity/models/api/config/RestTemplateConfig.class
 com/maturity/models/api/controller/AuthController.class
+com/maturity/models/api/model/Answer.class
 com/maturity/models/api/exception/InvalidRefreshTokenException.class
 com/maturity/models/api/controller/UserController.class
+com/maturity/models/api/model/Model.class
 com/maturity/models/api/jwt/JwtFilter.class
 com/maturity/models/api/MaturityModelsApi.class
 com/maturity/models/api/exception/NotFoundException.class
