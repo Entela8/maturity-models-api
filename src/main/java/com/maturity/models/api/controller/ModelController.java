@@ -27,10 +27,11 @@ public class ModelController {
      private final ModelService modelService;
     
      @PostMapping("/new")
-     public ResponseEntity<?> create(@RequestBody Model model, final Authentication authentication) {
+     public ResponseEntity<?> create(@RequestBody Model model/* , final Authentication authentication*/) {
           System.out.println("ciaooooo\n\n\n");
           try {
-               final String username = authentication.getName();
+               //final String username = authentication.getName();
+               String username = "john";
                Model createdModel = modelService.createModel(username, model);
                return ResponseEntity.status(HttpStatus.CREATED).body(createdModel);
           } catch (ResponseStatusException e) {

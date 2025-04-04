@@ -49,6 +49,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/auth/*").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/users/register").permitAll()
                         .requestMatchers("/api/v1/models/test").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/models/new").permitAll() // Allow POST /new without authentication
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtFilter(customUserDetailsService, jwtTokenValidator, jwtClaimExtractor), UsernamePasswordAuthenticationFilter.class)

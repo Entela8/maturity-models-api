@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
+import com.maturity.models.api.dto.UserDTO;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,7 +53,7 @@ public class UserController {
     public ResponseEntity<?> getAllUsers(Authentication authentication) {
         try {
             String username = authentication.getName();
-            List<User> users = userService.getAllUsers(username);
+            List<UserDTO> users = userService.getAllUsers(username);
             return ResponseEntity.ok(users);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

@@ -1,11 +1,13 @@
 package com.maturity.models.api.service;
 
+import com.maturity.models.api.dto.UserDTO;
 import com.maturity.models.api.exception.UsernameAlreadyInUseException;
 import com.maturity.models.api.model.Role;
 import com.maturity.models.api.model.User;
 import com.maturity.models.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -31,7 +33,7 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
-    public List<User> getAllUsers(String username) {
+    public List<UserDTO> getAllUsers(String username) {
         User user = userRepository.findByUsername(username);
         
         if (user == null) {
@@ -42,7 +44,23 @@ public class UserService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not allowed to view users");
         }
 
-        return userRepository.findAll();
-}
+        List<UserDTO> userDTOList = new ArrayList<>();
+            
+        List<User> users = userRepository.findAll();
+        
+        for (User u : users) {
+            UserDTO userDTO = new UserDTO();
+            userDTO.setId(u.getId());
+            userDTO.setUsername(u.getUsername());
+            userDTO.setFirstName(u.getFirstName());
+            userDTO.setLastName(u.getLastName());
+            userDTO.setEmail(u.getEmail());
+            userDTO.setRole(u.getRole());
+
+            userDTOList.add(userDTO);
+        }
+
+        return userDTOList;
+    }
 
 }
