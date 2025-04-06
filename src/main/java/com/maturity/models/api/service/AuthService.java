@@ -1,10 +1,13 @@
 package com.maturity.models.api.service;
 
+import com.maturity.models.api.dto.UserDTO;
 import com.maturity.models.api.exception.InvalidCredentialsException;
 import com.maturity.models.api.exception.InvalidRefreshTokenException;
 import com.maturity.models.api.jwt.JwtTokenGenerator;
 import com.maturity.models.api.jwt.JwtTokenValidator;
 import com.maturity.models.api.model.User;
+import com.maturity.models.api.repository.UserRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,6 +26,7 @@ public class AuthService {
     private final JwtTokenValidator jwtTokenValidator;
     private final AuthenticationManager authenticationManager;
     private final CustomUserDetailsService customUserDetailsService;
+    private final UserRepository userRepository;
     
     public Map<String, Object> login(User user) {
         try {
@@ -30,12 +34,27 @@ public class AuthService {
                 new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
 
             if (authentication.isAuthenticated()) {
-                Map<String, Object> authData = new HashMap<>();
-                authData.put("token", jwtTokenGenerator.generateToken(user.getUsername()));
-                authData.put("refreshToken", jwtTokenGenerator.generateRefreshToken(user.getUsername()));
-                authData.put("type", "Bearer");
-                return authData;
+                Map<String, Object> responseData = new HashMap<>();
+            
+                // Authentication data
+                responseData.put("token", jwtTokenGenerator.generateToken(user.getUsername()));
+                responseData.put("refreshToken", jwtTokenGenerator.generateRefreshToken(user.getUsername()));
+                responseData.put("type", "Bearer");
+
+                User userData = userRepository.findByUsername(user.getUsername());
+                // UserDTO data
+                UserDTO userDTO = new UserDTO();
+                userDTO.setId(userData.getId());
+                userDTO.setUsername(userData.getUsername());
+                userDTO.setFirstName(userData.getFirstName());
+                userDTO.setLastName(userData.getLastName());
+                userDTO.setEmail(userData.getEmail());
+                userDTO.setRole(userData.getRole());
+
+                responseData.put("user", userDTO);
+                return responseData;
             }
+
             throw new InvalidCredentialsException("Invalid username or password");
         } catch (AuthenticationException e) {
             throw new InvalidCredentialsException("Invalid username or password", e);

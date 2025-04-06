@@ -36,7 +36,5 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
-
-    @Column(name = "gitlab_access_token", nullable = true)
-    private String gitlabAccessToken;
+    
 }
