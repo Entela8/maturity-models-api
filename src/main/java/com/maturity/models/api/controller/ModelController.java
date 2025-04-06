@@ -21,6 +21,8 @@ import com.maturity.models.api.service.ModelService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -77,7 +79,29 @@ public class ModelController {
          } catch (Exception e) {
              return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
          }
-     } 
+     }
+
+     @DeleteMapping("/{id}")
+     public ResponseEntity<?> deleteModelFromID(@PathVariable Long id, Authentication authentication) {
+     if (authentication == null || !authentication.isAuthenticated()) {
+          return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not authenticated");
+     }
+
+     try {
+          boolean isDeleted = modelService.deleteModel(authentication.getName(), id);
+          
+          if (isDeleted) {
+               return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Model deleted successfully");
+          } else {
+               return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Model not found");
+          }
+     } catch (ResponseStatusException e) {
+          return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
+     } catch (Exception e) {
+          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
+     }
+     }
+
      
      private ResponseEntity<?> handleError(Exception e, String errorCode, String message) {
           return ResponseEntity.badRequest().body(Map.of("error", errorCode, "message", message));

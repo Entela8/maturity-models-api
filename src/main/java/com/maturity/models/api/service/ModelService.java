@@ -78,6 +78,19 @@ public class ModelService {
           return modelDTOs;
      }
 
+     public boolean deleteModel(String username, Long id) {
+          userService.ensureUserIsAllowed(username);
+      
+          Model model = modelRepository.findById(id).orElse(null);
+      
+          if (model == null) {
+              return false;
+          }
+      
+          modelRepository.delete(model);
+          return true;
+     }
+      
      public Model getModel(String username, Long modelId) {
      return modelRepository.findById(modelId)
                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Model not found"));
