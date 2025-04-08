@@ -1,14 +1,7 @@
 FROM openjdk:21-slim
 
-WORKDIR /app
- 
-COPY .mvn/ .mvn
-COPY mvnw pom.xml ./
-COPY src ./src
-
-RUN chmod +x ./mvnw
-RUN ./mvnw dependency:go-offline
+COPY ./target/maturity-models-0.0.1-SNAPSHOT .
 
 EXPOSE 8080
 
-ENTRYPOINT ["./mvnw", "spring-boot:run"]
+CMD ["sh","-c","java -XX:InitialRAMPercentage=50 -XX:MaxRAMPercentage=70  -XshowSettings $JAVA_OPTS -jar maturity-models-0.0.1-SNAPSHOT"]

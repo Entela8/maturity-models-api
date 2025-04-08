@@ -9,7 +9,7 @@
 		<relativePath/>
 	</parent>
 	<groupId>com.maturity.models.api</groupId>
-	<artifactId>api</artifactId>
+	<artifactId>maturity-models</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>api</name>
 	<description>Maturity Models - API for Maturity Models Assessments</description>
