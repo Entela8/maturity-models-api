@@ -14,6 +14,7 @@ import com.maturity.models.api.model.Team;
 import com.maturity.models.api.model.User;
 import com.maturity.models.api.repository.TeamRepository;
 import com.maturity.models.api.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -24,12 +25,32 @@ public class TeamService {
      private final TeamRepository teamRepository;
      private final UserService userService;
      private final UserRepository userRepository;
+     private final MailService mailService;
+
+     @Value("${WEB_URL}")
+     private String webUrl;
 
      @Transactional
      public void addMember(String username, Long id, String email) {
           userService.ensureUserIsAllowed(username);
 
-          return;
+          String invitationLink = webUrl + "/register?team=" + id;
+
+          String message = """
+                    <p>Bonjour,</p>
+                    </br>
+                    <p>Vous avez été invité à rejoindre une équipe sur la plateforme Maturity Models.</p>
+                    <p>Pour compléter votre inscription, cliquez ici :</p>
+                    <p><a href="%s" target="_blank">Rejoindre l'équipe</a></p>
+                    </br>
+                    <p>À bientôt !</p>
+                    """.formatted(invitationLink);
+
+          mailService.sendEmail(
+               email,
+               "Invitation à rejoindre une équipe - Maturity Models",
+               message
+          );
      }
 
      public List<MembersDTO> getTeamMembers(String username, Long teamId) {
