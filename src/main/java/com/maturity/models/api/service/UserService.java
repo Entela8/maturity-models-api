@@ -3,12 +3,17 @@ package com.maturity.models.api.service;
 import com.maturity.models.api.dto.UserDTO;
 import com.maturity.models.api.exception.UsernameAlreadyInUseException;
 import com.maturity.models.api.model.Role;
+import com.maturity.models.api.model.Team;
 import com.maturity.models.api.model.User;
+import com.maturity.models.api.repository.TeamRepository;
 import com.maturity.models.api.repository.UserRepository;
+import com.maturity.models.api.requests.user.CreateUserRequest;
+
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,13 +25,25 @@ import org.springframework.web.server.ResponseStatusException;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final TeamRepository teamRepository;
 
-    public User register(User user) {
+    public User register(CreateUserRequest user) {
         if (userRepository.findByUsername(user.getUsername()) != null) {
             throw new UsernameAlreadyInUseException("Username is already in use");
         }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+
+        User newUser = new User();
+        newUser.setEmail(user.getEmail());
+        newUser.setFirstName(user.getFirstName());
+        newUser.setLastName(user.getLastName());
+        newUser.setRole(user.getRole());
+        newUser.setUsername(user.getUsername());
+        
+        Optional<Team> teamOptional = teamRepository.findById(user.getTeamId());
+        teamOptional.ifPresent(newUser::setTeam);
+
+        newUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userRepository.save(newUser);
     }
 
     public User getUserDetails(String username) {
@@ -56,7 +73,9 @@ public class UserService {
             userDTO.setLastName(u.getLastName());
             userDTO.setEmail(u.getEmail());
             userDTO.setRole(u.getRole());
-
+            if(u.getTeam() != null) {
+                userDTO.setTeam(u.getTeam().getName());
+            }
             userDTOList.add(userDTO);
         }
 

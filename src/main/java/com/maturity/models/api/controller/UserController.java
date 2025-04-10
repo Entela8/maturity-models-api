@@ -3,6 +3,7 @@ package com.maturity.models.api.controller;
 import com.maturity.models.api.exception.ErrorResponse;
 import com.maturity.models.api.exception.UsernameAlreadyInUseException;
 import com.maturity.models.api.model.User;
+import com.maturity.models.api.requests.user.CreateUserRequest;
 import com.maturity.models.api.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,12 +22,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 @Slf4j
-@CrossOrigin(origins = "*") 
 public class UserController {
     private final UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody User user) {
+    public ResponseEntity<?> register(@RequestBody CreateUserRequest user) {
         try {
             User registeredUser = userService.register(user);
             return ResponseEntity.status(HttpStatus.CREATED).body(registeredUser);

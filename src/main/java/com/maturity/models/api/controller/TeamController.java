@@ -13,17 +13,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException.Forbidden;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.maturity.models.api.dto.MembersDTO;
+import com.maturity.models.api.dto.UserDTO;
 import com.maturity.models.api.exception.ErrorResponse;
 import com.maturity.models.api.exception.NotFoundException;
 import com.maturity.models.api.model.Team;
 import com.maturity.models.api.service.TeamService;
-
+import com.maturity.models.api.requests.teams.AddMemberRequest;
 import com.maturity.models.api.requests.teams.CreateTeamRequest;
+import com.maturity.models.api.requests.teams.InviteRequest;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -106,4 +110,73 @@ public class TeamController {
                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
           }
      }
+
+     @PostMapping("/invite")
+     public ResponseEntity<?> inviteUserToTeam(@RequestBody InviteRequest inviteRequest, @RequestHeader("username") String inviterUsername) {
+          teamService.inviteMember(inviterUsername, inviteRequest.getEmail(), inviteRequest.getTeam());
+          return ResponseEntity.ok("Invitation envoyée");
+     }
+
+     @PostMapping("/{teamId}/add-member")
+     public ResponseEntity<?> addMemberToTeam(
+          @PathVariable Long teamId,
+          @RequestBody AddMemberRequest request,
+          final Authentication authentication
+     ) {
+          try {
+               final String username = authentication.getName();
+               teamService.addMember(username, teamId, request.getEmail());
+               return ResponseEntity.ok("Membre ajouté à l'équipe avec succès");
+          } catch (NotFoundException e) {
+               return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+          } catch (ResponseStatusException e) {
+               return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
+          } catch (Exception e) {
+               return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur inattendue");
+          }
+     }
+
+     @GetMapping("/{teamId}/members")
+     public ResponseEntity<?> getTeamMembers(@PathVariable Long teamId, final Authentication authentication) {
+          try {
+               final String username = authentication.getName();
+               List<MembersDTO> members = teamService.getTeamMembers(username, teamId);
+               return ResponseEntity.ok(members);
+          } catch (ResponseStatusException e) {
+               return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
+          }
+     }
+
+     @GetMapping("/my")
+     public ResponseEntity<?> getMyTeam(final Authentication authentication) {
+          if (authentication == null || !authentication.isAuthenticated()) {
+               return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not authenticated");
+          }
+
+          try {
+               final String username = authentication.getName();
+               Team team = teamService.getUserTeam(username);
+               return ResponseEntity.ok(team);
+          } catch (NotFoundException e) {
+               return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Vous n'appartenez à aucune équipe");
+          }
+     }
+
+     @DeleteMapping("/{teamId}/remove-member/{userId}")
+     public ResponseEntity<?> removeMemberFromTeam(
+          @PathVariable Long teamId,
+          @PathVariable Long userId,
+          final Authentication authentication
+     ) {
+          try {
+               final String username = authentication.getName();
+               teamService.removeMemberFromTeam(username, teamId, userId);
+               return ResponseEntity.ok("Membre retiré avec succès");
+          } catch (NotFoundException e) {
+               return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+          } catch (ResponseStatusException e) {
+               return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
+          }
+     }
+
 }
