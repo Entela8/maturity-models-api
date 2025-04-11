@@ -50,7 +50,9 @@ public class AuthService {
                 userDTO.setLastName(userData.getLastName());
                 userDTO.setEmail(userData.getEmail());
                 userDTO.setRole(userData.getRole());
-
+                if(userData.getTeam() != null) {
+                    userDTO.setTeam(userData.getTeam().getId());
+                }
                 responseData.put("user", userDTO);
                 return responseData;
             }
