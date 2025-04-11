@@ -2,9 +2,7 @@ package com.maturity.models.api.controller;
 
 import java.util.List;
 
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
@@ -20,7 +18,6 @@ import org.springframework.web.client.HttpClientErrorException.Forbidden;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.maturity.models.api.dto.MembersDTO;
-import com.maturity.models.api.dto.UserDTO;
 import com.maturity.models.api.exception.ErrorResponse;
 import com.maturity.models.api.exception.NotFoundException;
 import com.maturity.models.api.model.Team;
