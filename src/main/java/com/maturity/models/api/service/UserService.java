@@ -74,7 +74,7 @@ public class UserService {
             userDTO.setEmail(u.getEmail());
             userDTO.setRole(u.getRole());
             if(u.getTeam() != null) {
-                userDTO.setTeam(u.getTeam().getName());
+                userDTO.setTeam(u.getTeam().getId());
             }
             userDTOList.add(userDTO);
         }
