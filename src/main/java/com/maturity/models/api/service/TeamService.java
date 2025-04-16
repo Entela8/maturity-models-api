@@ -27,8 +27,8 @@ public class TeamService {
      private final UserRepository userRepository;
      private final MailService mailService;
 
-     @Value("${WEB_URL}")
-     private String webUrl;
+     @Value("${app.web-url}")
+     private String webUrl;     
 
      @Transactional
      public void addMember(String username, Long id, String email) {

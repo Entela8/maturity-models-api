@@ -11,22 +11,25 @@ import lombok.AllArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "question")
+@Table(name = "response")
 public class Response {
      @Id
      @GeneratedValue(strategy = GenerationType.IDENTITY)
      private Long id;
 
      @ManyToOne
+     @JoinColumn(name = "answer_id", nullable = false)
      private Answer answer;
 
      @ManyToOne
+     @JoinColumn(name = "question_id", nullable = false)
      private Question question;
 
      @ManyToOne
+     @JoinColumn(name = "user_id", nullable = false)
      private User user;
 
      @ManyToOne
+     @JoinColumn(name = "session_id", nullable = false)
      private Session session;
-
 }
