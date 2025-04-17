@@ -2,6 +2,8 @@ package com.maturity.models.api.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -11,7 +13,12 @@ import com.maturity.models.api.model.Answer;
 import com.maturity.models.api.model.Model;
 import com.maturity.models.api.dto.ModelDTO;
 import com.maturity.models.api.model.Question;
+import com.maturity.models.api.model.Role;
+import com.maturity.models.api.model.Team;
+import com.maturity.models.api.model.User;
 import com.maturity.models.api.repository.ModelRepository;
+import com.maturity.models.api.repository.TeamRepository;
+import com.maturity.models.api.repository.UserRepository;
 import com.maturity.models.api.requests.models.CreateAnswerRequest;
 import com.maturity.models.api.requests.models.CreateModelRequest;
 import com.maturity.models.api.requests.models.CreateQuestionRequest;
@@ -24,6 +31,8 @@ import lombok.RequiredArgsConstructor;
 public class ModelService {
      private final ModelRepository modelRepository;
      private final UserService userService;
+     private final UserRepository userRepository;
+     private final TeamRepository teamRepository;
 
      @Transactional
      public Model createModel(String username, CreateModelRequest createModelRequest) {
@@ -57,21 +66,22 @@ public class ModelService {
      }
 
      public List<ModelDTO> getAllModels(String username) {
-          userService.ensureUserIsAllowed(username);
+          User user = userRepository.findByUsername(username);
+          List<Model> models;
 
-          List<Model> models = modelRepository.findAll();
-
-          List<ModelDTO> modelDTOs = new ArrayList<>();
-
-          for (Model m : models) {
-               ModelDTO modelDTO = new ModelDTO();
-               modelDTO.setId(m.getId());
-               modelDTO.setTitle(m.getTitle());
-
-               modelDTOs.add(modelDTO);
+          if (user.getRole() == Role.OWNER || user.getRole() == Role.ADMIN) {
+               models = modelRepository.findAll();
+          } else {
+               Long teamId = user.getTeam().getId();
+               models = modelRepository.findModelsByTeamId(teamId);
           }
 
-          return modelDTOs;
+          return models.stream().map(model -> {
+               ModelDTO dto = new ModelDTO();
+               dto.setId(model.getId());
+               dto.setTitle(model.getTitle());
+               return dto;
+          }).collect(Collectors.toList());
      }
 
      public boolean deleteModel(String username, Long id) {
