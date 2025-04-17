@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.maturity.models.api.dto.StatisticDTO;
 import com.maturity.models.api.exception.ErrorResponse;
 import com.maturity.models.api.model.Response;
 import com.maturity.models.api.requests.responses.AddResponsesRequest;
@@ -19,6 +20,7 @@ import com.maturity.models.api.service.ResponseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
@@ -56,12 +58,12 @@ public class ResponsesController {
           }
      }
 
-     @GetMapping("/")
-     public ResponseEntity<?> getResponsesOfModel(@RequestParam final Authentication authentication, String modelId, String sessionId) {
+     @GetMapping("/{modelId}/{sessionId}")
+     public ResponseEntity<?> getResponsesOfModel(final Authentication authentication, @PathVariable String modelId, @PathVariable String sessionId) {
           try {
                final String username = authentication.getName();
-               List<Response> responses = responseService.getResponsesOfModel(username, modelId, sessionId);
-               return ResponseEntity.status(HttpStatus.CREATED).body(responses);
+               List<StatisticDTO> responses = responseService.getResponsesOfModel(username, modelId, sessionId);
+               return ResponseEntity.status(HttpStatus.OK).body(responses);
  
           } catch (IllegalArgumentException e) {
                log.error("Error in fetching responses: {}", e.getMessage(), e);

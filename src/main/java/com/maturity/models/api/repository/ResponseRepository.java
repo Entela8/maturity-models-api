@@ -12,6 +12,6 @@ import com.maturity.models.api.model.User;
 @Repository
 public interface ResponseRepository extends JpaRepository<Response, Long> {
 
-     List<Response> findByUserAndSessionAndQuestionIdIn(User user, Session session, List<Long> questionIds);
+     List<Response> findBySession(Session session);
 
 }

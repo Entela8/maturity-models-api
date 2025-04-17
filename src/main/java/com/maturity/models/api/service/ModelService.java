@@ -2,7 +2,6 @@ package com.maturity.models.api.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
@@ -14,7 +13,6 @@ import com.maturity.models.api.model.Model;
 import com.maturity.models.api.dto.ModelDTO;
 import com.maturity.models.api.model.Question;
 import com.maturity.models.api.model.Role;
-import com.maturity.models.api.model.Team;
 import com.maturity.models.api.model.User;
 import com.maturity.models.api.repository.ModelRepository;
 import com.maturity.models.api.repository.TeamRepository;

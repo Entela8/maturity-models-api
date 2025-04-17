@@ -4,10 +4,16 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.maturity.models.api.dto.AnswerDTO;
 import com.maturity.models.api.dto.ResoponseDTO;
+import com.maturity.models.api.dto.StatisticDTO;
 import com.maturity.models.api.model.Answer;
 import com.maturity.models.api.model.Question;
 import com.maturity.models.api.model.Response;
@@ -65,31 +71,36 @@ public class ResponseService {
           return savedResponses;
      }
 
-     public List<Response> getResponsesOfModel(String username, String modelId, String sessionId) {
+     public List<StatisticDTO> getResponsesOfModel(String username, String modelId, String sessionId) {
           User user = userRepository.findByUsername(username);
-          if (user == null) {
-              throw new IllegalArgumentException("User not found");
-          }
-      
-          Session session = sessionRepository.findById(Long.valueOf(sessionId))
-              .orElseThrow(() -> new IllegalArgumentException("Session not found"));
-      
           Model model = modelRepository.findById(Long.valueOf(modelId))
-              .orElseThrow(() -> new IllegalArgumentException("Model not found"));
-      
-          // Get all questions of this model
-          List<Question> questions = questionRepository.findByModel(model);
-      
-          // Extract the IDs of the questions to filter responses
-          List<Long> questionIds = questions.stream()
-              .map(Question::getId)
-              .toList();
-      
-          // Fetch all responses that match user, session, and are related to this model's questions
-          List<Response> responses = responseRepository.findByUserAndSessionAndQuestionIdIn(user, session, questionIds);
-      
-          return responses;
-     }
-      
+        .orElseThrow(() -> new IllegalArgumentException("Model not found"));
 
+          // Récupère toutes les questions liées à ce modèle
+          List<Question> questions = questionRepository.findByModel(model);
+          Session session = sessionRepository.findById(Long.valueOf(sessionId))
+          .orElseThrow(() -> new IllegalArgumentException("Session not found"));
+          List<Response> responses = responseRepository.findBySession(session);
+
+          Set<Long> modelQuestionIds = questions.stream().map(Question::getId).collect(Collectors.toSet());
+          List<Response> filteredResponses = responses.stream()
+               .filter(r -> modelQuestionIds.contains(r.getQuestion().getId()))
+               .toList();
+
+          Map<User, List<Response>> responsesByUser = filteredResponses.stream()
+               .collect(Collectors.groupingBy(Response::getUser));
+
+          List<StatisticDTO> result = new ArrayList<>();
+          for (Map.Entry<User, List<Response>> entry : responsesByUser.entrySet()) {
+               User userEntry = entry.getKey();
+               List<AnswerDTO> answers = entry.getValue().stream()
+                    .map(r -> new AnswerDTO(r.getQuestion().getContent(), r.getAnswer().getScore()))
+                    .toList();
+
+               StatisticDTO userResponse = new StatisticDTO(userEntry.getId(), userEntry.getUsername(), answers);
+               result.add(userResponse);
+          }
+
+          return result;
+     }
 }
