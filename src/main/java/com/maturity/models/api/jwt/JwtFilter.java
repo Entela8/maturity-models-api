@@ -2,6 +2,7 @@ package com.maturity.models.api.jwt;
 
 import com.maturity.models.api.service.CustomUserDetailsService;
 import io.jsonwebtoken.Claims;
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.FilterChain;
 import lombok.RequiredArgsConstructor;
 import jakarta.servlet.ServletException;
@@ -47,4 +48,10 @@ public class JwtFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
+
+    @PostConstruct
+    public void init() {
+        System.out.println("JwtFilter loaded: " + customUserDetailsService);
+    }
+
 }

@@ -88,17 +88,17 @@ public class SessionController {
                final List<SessionDTO> sessions = sessionService.getTeamSession(username, id);
                return ResponseEntity.status(HttpStatus.OK).body(sessions);
           } catch (IllegalArgumentException e) {
-               log.error("Team name already in use: {}", e.getMessage(), e);
+               log.error("Error fetching the sessions {}", e.getMessage(), e);
                ErrorResponse errorResponse = new ErrorResponse(
-                    "team0001", 
-                    "A team with this name already exists", 
-                    "Choose a different team name"
+                    "session0001", 
+                    "Error fetching the sessions", 
+                    "Error fetching the sessions"
                );
                return ResponseEntity.badRequest().body(errorResponse);
           } catch (RuntimeException e) {
-               log.error("Unexpected error during team creation: {}", e.getMessage(), e);
+               log.error("Unexpected error during session fetching: {}", e.getMessage(), e);
                ErrorResponse errorResponse = new ErrorResponse(
-                    "team0002",   
+                    "session0002",   
                     "Unexpected error", 
                     "Please try again later"
                );
@@ -113,17 +113,17 @@ public class SessionController {
                final List<SessionDTO> sessions = sessionService.getActiveSessions(username, id);
                return ResponseEntity.status(HttpStatus.OK).body(sessions);
           } catch (IllegalArgumentException e) {
-               log.error("Team name already in use: {}", e.getMessage(), e);
+               log.error("Error fetching active sessions: {}", e.getMessage(), e);
                ErrorResponse errorResponse = new ErrorResponse(
-                    "team0001", 
-                    "A team with this name already exists", 
-                    "Choose a different team name"
+                    "session0003", 
+                    "Error fetching active sessions", 
+                    "Error fetching active sessions"
                );
                return ResponseEntity.badRequest().body(errorResponse);
           } catch (RuntimeException e) {
-               log.error("Unexpected error during team creation: {}", e.getMessage(), e);
+               log.error("Unexpected error fetching active sessions: {}", e.getMessage(), e);
                ErrorResponse errorResponse = new ErrorResponse(
-                    "team0002",   
+                    "team0004",   
                     "Unexpected error", 
                     "Please try again later"
                );
@@ -138,15 +138,15 @@ public class SessionController {
                final List<SessionDTO> sessions = sessionService.getAllSessions(username);
                return ResponseEntity.status(HttpStatus.OK).body(sessions);
           } catch (IllegalArgumentException e) {
-               log.error("Team name already in use: {}", e.getMessage(), e);
+               log.error("Error fetching all sessions: {}", e.getMessage(), e);
                ErrorResponse errorResponse = new ErrorResponse(
-                    "team0001", 
-                    "A team with this name already exists", 
-                    "Choose a different team name"
+                    "session0005", 
+                    "Error fetching all sessions", 
+                    "Error fetching all sessions"
                );
                return ResponseEntity.badRequest().body(errorResponse);
           } catch (RuntimeException e) {
-               log.error("Unexpected error during team creation: {}", e.getMessage(), e);
+               log.error("Unexpected error fetching all sessions: {}", e.getMessage(), e);
                ErrorResponse errorResponse = new ErrorResponse(
                     "team0002",   
                     "Unexpected error", 

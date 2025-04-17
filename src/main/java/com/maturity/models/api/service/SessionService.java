@@ -2,7 +2,6 @@ package com.maturity.models.api.service;
 
 import lombok.RequiredArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -11,14 +10,12 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.maturity.models.api.dto.SessionDTO;
-import com.maturity.models.api.model.Answer;
 import com.maturity.models.api.model.Model;
 import com.maturity.models.api.model.Session;
 import com.maturity.models.api.model.Team;
 import com.maturity.models.api.repository.ModelRepository;
 import com.maturity.models.api.repository.SessionRepository;
 import com.maturity.models.api.repository.TeamRepository;
-import com.maturity.models.api.requests.models.CreateAnswerRequest;
 import com.maturity.models.api.requests.sessions.ActivateSessionRequest;
 
 @Service
