@@ -31,10 +31,10 @@ public class TeamService {
      private String webUrl;     
 
      @Transactional
-     public void addMember(String username, Long id, String email) {
+     public void addMember(String username, Long id, String email, Role role) {
           userService.ensureUserIsAllowed(username);
 
-          String invitationLink = webUrl + "/register?team=" + id;
+          String invitationLink = webUrl + "/register?team=" + id + "&role=" + role;
 
           String message = """
                     <p>Bonjour,</p>

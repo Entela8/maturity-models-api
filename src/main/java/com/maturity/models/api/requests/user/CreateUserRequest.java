@@ -34,7 +34,6 @@ public class CreateUserRequest {
      @Valid
      private String password;
 
-     @NonNull
      @Valid
      private Long teamId;
 }

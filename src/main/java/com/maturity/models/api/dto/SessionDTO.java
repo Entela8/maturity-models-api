@@ -13,4 +13,5 @@ public class SessionDTO {
      private Long teamId;
      private boolean active;
      private Date date;
+     private String teamName;
 }

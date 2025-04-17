@@ -122,7 +122,7 @@ public class TeamController {
      ) {
           try {
                final String username = authentication.getName();
-               teamService.addMember(username, teamId, request.getEmail());
+               teamService.addMember(username, teamId, request.getEmail(), request.getRole());
                return ResponseEntity.ok("Mail d'ajout à l'équipe envoyé avec succès");
           } catch (NotFoundException e) {
                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

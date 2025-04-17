@@ -5,17 +5,20 @@ import lombok.RequiredArgsConstructor;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import com.maturity.models.api.dto.SessionDTO;
+import com.maturity.models.api.model.Answer;
 import com.maturity.models.api.model.Model;
 import com.maturity.models.api.model.Session;
 import com.maturity.models.api.model.Team;
 import com.maturity.models.api.repository.ModelRepository;
 import com.maturity.models.api.repository.SessionRepository;
 import com.maturity.models.api.repository.TeamRepository;
+import com.maturity.models.api.requests.models.CreateAnswerRequest;
 import com.maturity.models.api.requests.sessions.ActivateSessionRequest;
 
 @Service
@@ -49,8 +52,6 @@ public class SessionService {
      }
 
      public List<SessionDTO> getTeamSession(String username, String teamId) {
-          userService.ensureUserIsAllowed(username);
-
           Team team = teamRepository.findById(Long.valueOf(teamId))
                     .orElseThrow(() -> new RuntimeException("Team not found"));
 
@@ -63,7 +64,40 @@ public class SessionService {
           return sessions;
      }
 
+     public List<SessionDTO> getActiveSessions(String username, String modelId) {
+          Long modelIdLong = Long.valueOf(modelId);
+      
+          modelRepository.findById(modelIdLong)
+              .orElseThrow(() -> new RuntimeException("Model not found"));
+          List<Session> activeSessions = sessionRepository.findByModelIdAndActiveTrue(modelIdLong);
+      
+          return activeSessions.stream()
+                  .map(this::sessionToDTO)
+                  .collect(Collectors.toList());
+     }
 
+     public SessionDTO deactivateSession(String username, ActivateSessionRequest receivedSession) {
+          userService.ensureUserIsAllowed(username);
+
+          Optional<Session> optionalSession = sessionRepository.findByModelIdAndTeamId(receivedSession.getModelId(), receivedSession.getTeamId());
+          Session session = optionalSession.get();
+
+          session.setActive(false);
+          sessionRepository.save(session);
+
+          SessionDTO sessionDTO = sessionToDTO(session);
+
+          return sessionDTO;
+     }
+
+     public List<SessionDTO> getAllSessions(String username) {
+          userService.ensureUserIsAllowed(username);
+      
+          return sessionRepository.findAll().stream()
+                  .map(this::sessionToDTO)
+                  .collect(Collectors.toList());
+     }
+      
      public SessionDTO sessionToDTO(Session session){
           SessionDTO sessionDTO = new SessionDTO();
 
@@ -72,7 +106,7 @@ public class SessionService {
           sessionDTO.setId(session.getId());
           sessionDTO.setModelId(session.getModel().getId());
           sessionDTO.setTeamId(session.getTeam().getId());
-
+          sessionDTO.setTeamName(session.getTeam().getName());
           return sessionDTO;
      }
 }

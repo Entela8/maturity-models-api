@@ -37,32 +37,56 @@ public class SessionController {
                return ResponseEntity.status(HttpStatus.CREATED).body(activatedSession);
  
           } catch (IllegalArgumentException e) {
-               log.error("Team name already in use: {}", e.getMessage(), e);
+               log.error("Error in activating session: {}", e.getMessage(), e);
                ErrorResponse errorResponse = new ErrorResponse(
-                    "team0001", 
-                    "A team with this name already exists", 
-                    "Choose a different team name"
+                    "session0001", 
+                    "Error in activating session", 
+                    "Error in activating session"
                );
                return ResponseEntity.badRequest().body(errorResponse);
           } catch (RuntimeException e) {
-               log.error("Unexpected error during team creation: {}", e.getMessage(), e);
+               log.error("Unexpected error in activating session: {}", e.getMessage(), e);
                ErrorResponse errorResponse = new ErrorResponse(
-                    "team0002",   
-                    "Unexpected error", 
-                    "Please try again later"
+                    "session0002",   
+                    "Unexpected error in activating session", 
+                    "Unexpected error in activating session"
                );
                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
           }
      }
 
+     @PostMapping("/deactivate")
+     public ResponseEntity<?> deactivateSession(@Validated @RequestBody ActivateSessionRequest session, final Authentication authentication) {
+         try {
+             final String username = authentication.getName();
+             final SessionDTO deactivatedSession = sessionService.deactivateSession(username, session);
+             return ResponseEntity.status(HttpStatus.OK).body(deactivatedSession);
+     
+         } catch (IllegalArgumentException e) {
+             log.error("Error in deactivating session: {}", e.getMessage(), e);
+             ErrorResponse errorResponse = new ErrorResponse(
+                 "session0003", 
+                 "Error in deactivating session", 
+                 "Invalid session or parameters"
+             );
+             return ResponseEntity.badRequest().body(errorResponse);
+         } catch (RuntimeException e) {
+             log.error("Unexpected error in deactivating session: {}", e.getMessage(), e);
+             ErrorResponse errorResponse = new ErrorResponse(
+                 "session0004",   
+                 "Unexpected error in deactivating session", 
+                 "Please try again later"
+             );
+             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+         }
+     }
 
      @GetMapping("/team/{id}")
      public ResponseEntity<?> getTeamSession(@Validated final Authentication authentication, @PathVariable String id) {
           try {
                final String username = authentication.getName();
                final List<SessionDTO> sessions = sessionService.getTeamSession(username, id);
-               return ResponseEntity.status(HttpStatus.CREATED).body(sessions);
- 
+               return ResponseEntity.status(HttpStatus.OK).body(sessions);
           } catch (IllegalArgumentException e) {
                log.error("Team name already in use: {}", e.getMessage(), e);
                ErrorResponse errorResponse = new ErrorResponse(
@@ -81,4 +105,55 @@ public class SessionController {
                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
           }
      }
+
+     @GetMapping("/{id}")
+     public ResponseEntity<?> getActiveSessions(@Validated final Authentication authentication, @PathVariable String id) {
+          try {
+               final String username = authentication.getName();
+               final List<SessionDTO> sessions = sessionService.getActiveSessions(username, id);
+               return ResponseEntity.status(HttpStatus.OK).body(sessions);
+          } catch (IllegalArgumentException e) {
+               log.error("Team name already in use: {}", e.getMessage(), e);
+               ErrorResponse errorResponse = new ErrorResponse(
+                    "team0001", 
+                    "A team with this name already exists", 
+                    "Choose a different team name"
+               );
+               return ResponseEntity.badRequest().body(errorResponse);
+          } catch (RuntimeException e) {
+               log.error("Unexpected error during team creation: {}", e.getMessage(), e);
+               ErrorResponse errorResponse = new ErrorResponse(
+                    "team0002",   
+                    "Unexpected error", 
+                    "Please try again later"
+               );
+               return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+          }
+     }
+
+     @GetMapping("/all")
+     public ResponseEntity<?> getAllSessions(@Validated final Authentication authentication) {
+          try {
+               final String username = authentication.getName();
+               final List<SessionDTO> sessions = sessionService.getAllSessions(username);
+               return ResponseEntity.status(HttpStatus.OK).body(sessions);
+          } catch (IllegalArgumentException e) {
+               log.error("Team name already in use: {}", e.getMessage(), e);
+               ErrorResponse errorResponse = new ErrorResponse(
+                    "team0001", 
+                    "A team with this name already exists", 
+                    "Choose a different team name"
+               );
+               return ResponseEntity.badRequest().body(errorResponse);
+          } catch (RuntimeException e) {
+               log.error("Unexpected error during team creation: {}", e.getMessage(), e);
+               ErrorResponse errorResponse = new ErrorResponse(
+                    "team0002",   
+                    "Unexpected error", 
+                    "Please try again later"
+               );
+               return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+          }
+     }
+     
 }

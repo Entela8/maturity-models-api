@@ -5,6 +5,9 @@ import lombok.Setter;
 
 import java.util.Date;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -22,6 +25,7 @@ public class Session {
  
      @ManyToOne
      @JoinColumn(name = "model_id", nullable = false)
+     @OnDelete(action = OnDeleteAction.CASCADE)
      private Model model;
  
      @ManyToOne

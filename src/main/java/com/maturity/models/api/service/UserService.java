@@ -39,8 +39,10 @@ public class UserService {
         newUser.setRole(user.getRole());
         newUser.setUsername(user.getUsername());
         
-        Optional<Team> teamOptional = teamRepository.findById(user.getTeamId());
-        teamOptional.ifPresent(newUser::setTeam);
+        if(user.getTeamId() != null) {
+            Optional<Team> teamOptional = teamRepository.findById(user.getTeamId());
+            teamOptional.ifPresent(newUser::setTeam);
+        }
 
         newUser.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(newUser);
