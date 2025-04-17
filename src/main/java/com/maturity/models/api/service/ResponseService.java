@@ -36,8 +36,6 @@ public class ResponseService {
      private final ModelRepository modelRepository;
 
      public List<Response> saveResponses(String username, AddResponsesRequest responsesSent) {
-          userService.ensureUserIsAllowed(username);
-
           User user = userRepository.findByUsername(username);
           if (user == null) {
                throw new IllegalArgumentException("User not found");
