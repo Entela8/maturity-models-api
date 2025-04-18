@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.maturity.models.api.dto.StatisticDTO;
 import com.maturity.models.api.exception.ErrorResponse;
-import com.maturity.models.api.model.Response;
 import com.maturity.models.api.requests.responses.AddResponsesRequest;
 import com.maturity.models.api.service.ResponseService;
 
@@ -21,8 +20,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-
 
 @RestController
 @RequestMapping("/api/v1/response")
@@ -38,7 +35,6 @@ public class ResponsesController {
                final String username = authentication.getName();
                responseService.saveResponses(username, responses);
                return ResponseEntity.status(HttpStatus.CREATED).body(responses);
- 
           } catch (IllegalArgumentException e) {
                log.error("Error in saving the response: {}", e.getMessage(), e);
                ErrorResponse errorResponse = new ErrorResponse(

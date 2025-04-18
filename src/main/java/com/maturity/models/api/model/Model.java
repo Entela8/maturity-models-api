@@ -2,6 +2,7 @@ package com.maturity.models.api.model;
 
 import java.util.Date;
 import java.util.List;
+import java.util.ArrayList;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -38,6 +39,6 @@ public class Model {
           orphanRemoval = true
      )
      @JsonManagedReference
-     private List<Question> questions;
+     private List<Question> questions = new ArrayList<>();
      
 }

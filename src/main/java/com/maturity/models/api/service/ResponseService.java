@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -33,7 +32,6 @@ import com.maturity.models.api.requests.responses.AddResponsesRequest;
 @RequiredArgsConstructor
 public class ResponseService {
 
-     private final UserService userService;
      private final UserRepository userRepository;
      private final SessionRepository sessionRepository;
      private final QuestionRepository questionRepository;
@@ -72,7 +70,6 @@ public class ResponseService {
      }
 
      public List<StatisticDTO> getResponsesOfModel(String username, String modelId, String sessionId) {
-          User user = userRepository.findByUsername(username);
           Model model = modelRepository.findById(Long.valueOf(modelId))
         .orElseThrow(() -> new IllegalArgumentException("Model not found"));
 
