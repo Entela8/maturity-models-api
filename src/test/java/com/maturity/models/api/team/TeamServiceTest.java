@@ -57,18 +57,17 @@ class TeamServiceTest {
 
      @Test
      void testAddMember_ShouldSendEmail() {
-          String username = "admin";
-          Long teamId = 1L;
-          String email = "test@example.com";
-          Role role = Role.MEMBER;
-
-          doNothing().when(userService).ensureUserIsAllowed(username);
-          doNothing().when(mailService).sendEmail(anyString(), anyString(), anyString());
-
-          teamService.addMember(username, teamId, email, role);
-
-          verify(mailService, times(1)).sendEmail(eq(email), contains("Invitation"), contains("Rejoindre l'équipe"));
-     }
+         String username = "admin";
+         Long teamId = 1L;
+         String email = "test@example.com";
+         Role role = Role.MEMBER;
+     
+         doNothing().when(mailService).sendEmail(anyString(), anyString(), anyString());
+     
+         teamService.addMember(username, teamId, email, role);
+     
+         verify(mailService, times(1)).sendEmail(eq(email), contains("Invitation"), contains("Rejoindre l'équipe"));
+     }     
 
      @Test
      void testGetTeamMembers_ShouldReturnMemberList() {
