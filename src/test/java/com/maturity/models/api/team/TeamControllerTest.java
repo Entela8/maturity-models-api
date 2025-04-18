@@ -18,7 +18,6 @@ import com.maturity.models.api.requests.teams.AddMemberRequest;
 import com.maturity.models.api.requests.teams.CreateTeamRequest;
 import com.maturity.models.api.requests.teams.InviteRequest;
 import com.maturity.models.api.service.TeamService;
-import com.maturity.models.api.exception.NotFoundException;
 
 
 import static org.mockito.Mockito.doThrow;
