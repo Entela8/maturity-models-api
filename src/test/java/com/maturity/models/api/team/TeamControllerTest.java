@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.client.HttpClientErrorException.Forbidden;
 import org.springframework.web.server.ResponseStatusException;
 
+
 import com.maturity.models.api.controller.ModelController;
 import com.maturity.models.api.controller.TeamController;
 import com.maturity.models.api.dto.MembersDTO;
@@ -26,6 +27,8 @@ import com.maturity.models.api.requests.teams.CreateTeamRequest;
 import com.maturity.models.api.requests.teams.InviteRequest;
 import com.maturity.models.api.service.ModelService;
 import com.maturity.models.api.service.TeamService;
+import com.maturity.models.api.exception.NotFoundException;
+
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -208,7 +211,7 @@ class TeamControllerTest {
           request.setRole(Role.MEMBER);
 
           when(authentication.getName()).thenReturn("carlo");
-          when(teamService.addMember("carlo", teamId, "newuser@example.com", "member"))
+          when(teamService.addMember("carlo", teamId, "newuser@example.com", Role.MEMBER))
                .thenThrow(new NotFoundException("Team not found"));
 
           ResponseEntity<?> response = teamController.addMemberToTeam(teamId, request, authentication);
