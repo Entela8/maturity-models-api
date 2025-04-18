@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 
+
 import com.maturity.models.api.controller.TeamController;
 import com.maturity.models.api.dto.MembersDTO;
 import com.maturity.models.api.exception.ErrorResponse;
@@ -17,6 +18,8 @@ import com.maturity.models.api.requests.teams.AddMemberRequest;
 import com.maturity.models.api.requests.teams.CreateTeamRequest;
 import com.maturity.models.api.requests.teams.InviteRequest;
 import com.maturity.models.api.service.TeamService;
+import com.maturity.models.api.exception.NotFoundException;
+
 
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
