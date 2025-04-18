@@ -65,39 +65,39 @@ public class ModelController {
 
      @GetMapping("/{id}")
      public ResponseEntity<?> getModelFromID(@PathVariable Long id, Authentication authentication) {
-         if (authentication == null || !authentication.isAuthenticated()) {
-             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not authenticated");
-         }
-     
-         try {
-             Model model = modelService.getModel(authentication.getName(), id); 
-             return ResponseEntity.ok(model);
-         } catch (ResponseStatusException e) {
-             return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
-         } catch (Exception e) {
-             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
-         }
+          if (authentication == null || !authentication.isAuthenticated()) {
+              return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not authenticated");
+          }
+      
+          try {
+              Model model = modelService.getModel(authentication.getName(), id);
+              return ResponseEntity.ok(model);
+          } catch (ResponseStatusException e) {
+              return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
+          } catch (Exception e) {
+              return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
+          }
      }
 
      @DeleteMapping("/{id}")
      public ResponseEntity<?> deleteModelFromID(@PathVariable Long id, Authentication authentication) {
-     if (authentication == null || !authentication.isAuthenticated()) {
-          return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not authenticated");
-     }
-
-     try {
-          boolean isDeleted = modelService.deleteModel(authentication.getName(), id);
-          
-          if (isDeleted) {
-               return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Model deleted successfully");
-          } else {
-               return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Model not found");
+          if (authentication == null || !authentication.isAuthenticated()) {
+               return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not authenticated");
           }
-     } catch (ResponseStatusException e) {
-          return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
-     } catch (Exception e) {
-          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
-     }
+
+          try {
+               boolean isDeleted = modelService.deleteModel(authentication.getName(), id);
+               
+               if (isDeleted) {
+                    return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Model deleted successfully");
+               } else {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Model not found");
+               }
+          } catch (ResponseStatusException e) {
+               return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
+          } catch (Exception e) {
+               return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
+          }
      }
 
      
